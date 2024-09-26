@@ -4,6 +4,16 @@ from fastapi import FastAPI, Request, Response
 from starlette.middleware.base import BaseHTTPMiddleware
 
 from route.route_chat import router as chat_router
+import logging
+
+logging.basicConfig(
+    filename='./log/app.log',  # 确保这个路径与您的日志目录一致
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    datefmt='%Y-%m-%d %H:%M:%S'
+)
+logger = logging.getLogger("poe2openai")
+
 
 class CustomCORSMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next):
@@ -32,10 +42,10 @@ class CustomCORSMiddleware(BaseHTTPMiddleware):
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Startup code here
-    print("Starting up...")
+    logger.info("Starting up...")
     yield
     # Shutdown code he
-    print("Shutting down...")
+    logger.info("Shutting down...")
 
 
 app = FastAPI(lifespan=lifespan)
